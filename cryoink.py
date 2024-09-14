@@ -1,7 +1,39 @@
 # Modules
 import sys
-import requests
-from termcolor import colored
+termcolor = True
+try:
+    from termcolor import colored
+except ModuleNotFoundError:
+    print("[ ERROR ] Module termcolor not found. We recommend installing it for a better experience using CRYoink.")
+    uin = input("Would you like to continue? [y/N]: ")
+    if "y" in uin.lower(): termcolor = False
+    else:
+        import os
+        return_code =  os.system("pip install termcolor")
+        if return_code != 0:
+            print("[ ERROR ] Failed to install requests module. Quitting...")
+            sys.exit(return_code)
+        else:
+            print("[ INFO ] Module termcolor was *probably* installed. Please reopen the app.")
+            sys.exit(0)
+try:
+    import requests
+except ModuleNotFoundError:
+    print(f"{colored('[ ERROR ]', 'red')} requests module wasn't found!" if termcolor else "[ ERROR ] requests module wasn't found!")
+    uin = input("Would you like to install it? [y/N]: ")
+    if "y" in uin.lower():
+        print("Installing requests module...")
+        import os
+        return_code = os.system("pip install requests")
+        if return_code != 0:
+            print(f"{colored('[ ERROR ]', 'red')} Failed to install requests module. Quitting..." if termcolor else "[ ERROR ] Failed to install requests module. Quitting...")
+            sys.exit(return_code)
+        else:
+            print(f"{colored('[ INFO ]', 'grey')} Module requests was *probably* installed. Please reopen the app." if termcolor else "[ INFO ] Module requests was *probably* installed. Please reopen the app.")
+            sys.exit(0)
+    else:
+        print(f"{colored('[ ERROR ]', 'red')} The requests module is required. Please install it and reopen the app." if termcolor else "[ ERROR ] The requests module is required. Please install it and reopen the app.")
+        sys.exit(1)
 
 # args variable for readability
 args = sys.argv
@@ -14,18 +46,19 @@ if "-s" in args: supression = True
 else: supression = False
 
 if not supression and verbose: 
-    print(f"{colored('[ INFO ]', 'grey')} Running CRYoink version 1.0.2, updated on 7/28/24")
+    print(f"{colored('[ INFO ]', 'grey')} Running CRYoink version 1.0.3, updated on 9/13/24" if termcolor else "[ INFO ] Running CRYoink version 1.0.3, updated on 9/13/24")
 
-helpmessage = """CRYoink version 1.0.2
+helpmessage = """CRYoink version 1.0.3
 
--h[elp] [ Shows this help message.                                    ]
--i[d]   [ The extension ID you would like to yoink.                   ]
--o[ut]  [ The file to be written into. e.x extension.crx.             ]
--O[D]   [ The directory to write the crx file into. e.x extensions/.  ]
--u[rl]  [ Select a URL to be used. Insert {id} where ID is necessary. ]
--v      [ Enables verbose mode. Prints debug statements like warnings ]
--s      [ Disables/Supresses print statements.                        ]
--b      [ Lets you enter multiple extension IDs. Must be used at end. ]
+-h[elp] [ Shows this help message.                                     ]
+-i[d]   [ The extension ID you would like to yoink.                    ]
+-o[ut]  [ The file to be written into. e.x extension.crx.              ]
+-O[D]   [ The directory to write the crx file into. e.x extensions/.   ]
+-u[rl]  [ Select a URL to be used. Insert {id} where ID is necessary.  ]
+-U      [ Extracts inside of crx into output directory or path ran in. ]
+-v      [ Enables verbose mode. Prints debug statements like warnings  ]
+-s      [ Disables/Supresses print statements.                         ]
+-b      [ Lets you enter multiple extension IDs. Must be used at end.  ]
 """
 
 # Help arg handling
@@ -58,7 +91,7 @@ elif "--id" in args:
 else:
     if not "-b":
         if not supression: 
-            print(f"{colored('[ WARNING ]', 'yellow')} ID not given. Using stdin instead...")
+            print(f"{colored('[ WARNING ]', 'yellow')} ID not given. Using stdin instead..." if termcolor else "[ WARNING ] ID not given. Using stdin instead...")
             id = input("Enter ID: ")
         else:
             sys.exit(1)
@@ -72,8 +105,8 @@ elif "--out" in args:
     of = args[args.index("--out")+1]
 else:
     if not supression:
-        if verbose and not "-b" in args: print(f"{colored('[ INFO ]', 'grey')} Argument \"-o\" not found. Defaulting output file to \"extension.crx\"...")
-        elif "-b" in args: print(f"{colored('[ INFO ]', 'grey')} Argument \"-o\" not found. Defaulting output file to the extension ID...")
+        if verbose and not "-b" in args: print(f"{colored('[ INFO ]', 'grey')} Argument \"-o\" not found. Defaulting output file to \"extension.crx\"..." if termcolor else "[ INFO ] Argument \"-o\" not found. Defaulting output file to \"extension.crx\"...")
+        elif "-b" in args: print(f"{colored('[ INFO ]', 'grey')} Argument \"-o\" not found. Defaulting output file to the extension ID..." if termcolor else "[ INFO ] Argument \"-o\" not found. Defaulting output file to the extension ID...")
     of = "extension.crx"
 
 if "-u" in args:
@@ -102,11 +135,11 @@ try:
             request = requests.get(f"https://clients2.google.com/service/update2/crx?response=redirect&os=linux&arch=x64&os_arch=x86_64&nacl_arch=x86-64&prod=chromium&prodchannel=unknown&prodversion=91.0.4442.4&lang=en-US&acceptformat=crx2,crx3&x=id%3D{extension}%26installsource%3Dondemand%26uc", stream=True)
             if request.status_code != 200:
                 if not supression:
-                    print(f"{colored('[ ERROR ]', 'red')} Hm. Couldn't find extension {extension}.")
+                    print(f"{colored('[ ERROR ]', 'red')} Hm. Couldn't find extension {extension}." if termcolor else f"[ ERROR ] Hm. Couldn't find extension {extension}.")
                 sys.exit(1)
             else:
                 if verbose:
-                    print(f"{colored('[ INFO ]', 'grey')} Found extension {extension}.")
+                    print(f"{colored('[ INFO ]', 'grey')} Found extension {extension}." if termcolor else f"[ INFO ] Found extension {extension}.")
                     with open(f"{extension}.crx", "wb") as f:
                         if not supression: print("Downloading...", end='')
                         f.write(request.content)
@@ -114,26 +147,30 @@ try:
                         f.close()
 except requests.exceptions.MissingSchema:
     if not supression:
-        if verbose: print(f"{colored('[ ERROR ]', 'red')} Schema missing. You probably want to use https.")
+        if verbose: print(f"{colored('[ ERROR ]', 'red')} Schema missing. You probably want to use https." if termcolor else "[ ERROR ] Schema missing. You probably want to use https.")
     sys.exit(1)
 except requests.exceptions.InvalidSchema:
     if not supression:
-        if verbose: print(f"{colored('[ ERROR ]', 'red')} Schema invalid. Did you mean to use https?")
+        if verbose: print(f"{colored('[ ERROR ]', 'red')} Schema invalid. Did you mean to use https?" if termcolor else "[ ERROR ] Schema invalid. Did you mean to use https?")
     sys.exit(1)
 
 # Error handling
 if request.status_code != 200:
     if not supression:
-        print(f"{colored('[ ERROR ]', 'red')} Hm. Couldn't find that extension.")
+        print(f"{colored('[ ERROR ]', 'red')} Hm. Couldn't find that extension." if termcolor else "[ ERROR ] Hm. Couldn't find that extension.")
     sys.exit(1)
 
 if not supression and verbose:
-    if verbose: print(f"{colored('[ INFO ]', 'grey')} Extension found!")
+    if verbose: print(f"{colored('[ INFO ]', 'grey')} Extension found!" if termcolor else "[ INFO ] Extension found!")
 
 # Writes the extension data to the file.
 if not "-b" in args:
-    with open(of, 'wb') as f:
-        if not supression: print("Downloading...", end='')
-        f.write(request.content)
-        if not supression: print("      Done!")
-        f.close()
+    if not "-U" in args:
+        with open(of, 'wb') as f:
+            if not supression: print("Downloading...", end='')
+            f.write(request.content)
+            if not supression: print("      Done!")
+            f.close()
+    else:
+        print("unfinished... D:")
+        

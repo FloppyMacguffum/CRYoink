@@ -4,7 +4,7 @@ CRYoink is a chrome extension installer. If it's on the chrome web store, you ca
 ## How do I use this? 
 You can run it normally, just like some other python app. However, it also has some argument handling.
 ```
--h[elp] [ Shows the help message.                                    ]
+-h[elp] [ Shows the help message.                                     ]
 -i[d]   [ The extension ID you would like to yoink.                   ]
 -o[ut]  [ The file to be written into. e.x extension.crx.             ]
 -O[D]   [ The directory to write the crx file into. e.x extensions/.  ]
@@ -31,7 +31,7 @@ cryoink.py
 extension.crx <-- what just got downloaded!
 
 $ python cryoink.py -v -O extensions -i <insert chrome extension ID here>
-[ INFO ] CRYoink version 1.0.2, updated on 7/28/24
+[ INFO ] CRYoink version 1.0.3, updated on 9/13/24
 [ INFO ] Argument "-o" not found. Defaulting to extension.crx...
 [ INFO ] Extension found!
 Downloading...      Done!
