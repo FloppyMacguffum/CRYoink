@@ -1,6 +1,7 @@
 # Modules
 import sys
 termcolor = True
+vers = "1.0.4"
 try:
     from termcolor import colored
 except ModuleNotFoundError:
@@ -9,7 +10,7 @@ except ModuleNotFoundError:
     if "y" in uin.lower(): termcolor = False
     else:
         import os
-        return_code =  os.system("pip install termcolor")
+        return_code = os.system("pip install termcolor")
         if return_code != 0:
             print("[ ERROR ] Failed to install requests module. Quitting...")
             sys.exit(return_code)
@@ -45,10 +46,10 @@ else: verbose = False
 if "-s" in args: supression = True
 else: supression = False
 
-if not supression and verbose: 
-    print(f"{colored('[ INFO ]', 'grey')} Running CRYoink version 1.0.3, updated on 9/13/24" if termcolor else "[ INFO ] Running CRYoink version 1.0.3, updated on 9/13/24")
+if not supression and verbose:
+    print(f"{colored('[ INFO ]', 'grey')} Running CRYoink version {vers}, updated on 12/24/24" if termcolor else f"[ INFO ] Running CRYoink version {vers}, updated on 12/24/24")
 
-helpmessage = """CRYoink version 1.0.3
+helpmessage = f"""CRYoink version {vers}
 
 -h[elp] [ Shows this help message.                                     ]
 -i[d]   [ The extension ID you would like to yoink.                    ]
@@ -62,25 +63,12 @@ helpmessage = """CRYoink version 1.0.3
 """
 
 # Help arg handling
-if "-h" in args:
+if "-h" in args or "-help" in args or "--help" in args:
     if not supression:
         print(helpmessage)
         sys.exit(0)
     else:
         sys.exit(1)
-elif "-help" in args:
-    if not supression:
-        print(helpmessage)
-        sys.exit(0)
-    else:
-        sys.exit(1)
-elif "--help" in args:
-    if not supression:
-        print(helpmessage)
-        sys.exit(0)
-    else:
-        sys.exit(1)
-
 # ID arg handling
 if "-i" in args:
     id = args[args.index("-i")+1]
@@ -90,7 +78,7 @@ elif "--id" in args:
     id = args[args.index("--id")+1]
 else:
     if not "-b":
-        if not supression: 
+        if not supression:
             print(f"{colored('[ WARNING ]', 'yellow')} ID not given. Using stdin instead..." if termcolor else "[ WARNING ] ID not given. Using stdin instead...")
             id = input("Enter ID: ")
         else:
@@ -137,21 +125,19 @@ try:
                 if not supression:
                     print(f"{colored('[ ERROR ]', 'red')} Hm. Couldn't find extension {extension}." if termcolor else f"[ ERROR ] Hm. Couldn't find extension {extension}.")
                 sys.exit(1)
-            else:
-                if verbose:
-                    print(f"{colored('[ INFO ]', 'grey')} Found extension {extension}." if termcolor else f"[ INFO ] Found extension {extension}.")
-                    with open(f"{extension}.crx", "wb") as f:
-                        if not supression: print("Downloading...", end='')
-                        f.write(request.content)
-                        if not supression: print("      Done!")
-                        f.close()
+            if verbose: print(f"{colored('[ INFO ]', 'grey')} Found extension {extension}." if termcolor else f"[ INFO ] Found extension {extension}.")
+            with open(f"{extension}.crx", "wb") as f:
+                if not supression: print("Downloading...", end='')
+                f.write(request.content)
+                if not supression: print("      Done!")
+                f.close()
 except requests.exceptions.MissingSchema:
-    if not supression:
-        if verbose: print(f"{colored('[ ERROR ]', 'red')} Schema missing. You probably want to use https." if termcolor else "[ ERROR ] Schema missing. You probably want to use https.")
+    if not supression and verbose:
+        print(f"{colored('[ ERROR ]', 'red')} Schema missing. You probably want to use https." if termcolor else "[ ERROR ] Schema missing. You probably want to use https.")
     sys.exit(1)
 except requests.exceptions.InvalidSchema:
-    if not supression:
-        if verbose: print(f"{colored('[ ERROR ]', 'red')} Schema invalid. Did you mean to use https?" if termcolor else "[ ERROR ] Schema invalid. Did you mean to use https?")
+    if not supression and verbose:
+        print(f"{colored('[ ERROR ]', 'red')} Schema invalid. Did you mean to use https?" if termcolor else "[ ERROR ] Schema invalid. Did you mean to use https?")
     sys.exit(1)
 
 # Error handling
@@ -161,7 +147,7 @@ if request.status_code != 200:
     sys.exit(1)
 
 if not supression and verbose:
-    if verbose: print(f"{colored('[ INFO ]', 'grey')} Extension found!" if termcolor else "[ INFO ] Extension found!")
+    print(f"{colored('[ INFO ]', 'grey')} Extension found!" if termcolor else "[ INFO ] Extension found!")
 
 # Writes the extension data to the file.
 if not "-b" in args:
@@ -173,4 +159,3 @@ if not "-b" in args:
             f.close()
     else:
         print("unfinished... D:")
-        
