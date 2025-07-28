@@ -29,5 +29,5 @@ jobs:
         pip install requests termcolor
     - name: Download uBlock Origin for testing
       run: |
-        python cryoink.py -i cjpalhdlnbpafiamejdnhcphjbkeiagm
+        python cryoink.py -i mnjggcdmjocbbbhaepdhchncahnbgone
         if [ -f "extension.crx" ]; then exit 0; else exit 1; fi
