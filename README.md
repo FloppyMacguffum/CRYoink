@@ -16,8 +16,6 @@ You can run it normally, just like some other python app. However, it also has s
 ### Examples
 ```
 $ python cryoink.py -i <insert chrome extension ID here>
-
-Extension found!
 Downloading...      Done!
 
 $ ls
@@ -31,7 +29,7 @@ cryoink.py
 extension.crx <-- what just got downloaded!
 
 $ python cryoink.py -v -O extensions -i <insert chrome extension ID here>
-[ INFO ] CRYoink version 1.0.3, updated on 9/13/24
+[ INFO ] CRYoink version 1.0.5, updated on 7/28/25
 [ INFO ] Argument "-o" not found. Defaulting to extension.crx...
 [ INFO ] Extension found!
 Downloading...      Done!
