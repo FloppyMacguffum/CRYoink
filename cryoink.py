@@ -1,7 +1,7 @@
 # Modules
 import sys
 termcolor = True
-vers = "1.0.4"
+vers = "1.0.5"
 try:
     from termcolor import colored
 except ModuleNotFoundError:
@@ -47,7 +47,7 @@ if "-s" in args: supression = True
 else: supression = False
 
 if not supression and verbose:
-    print(f"{colored('[ INFO ]', 'grey')} Running CRYoink version {vers}, updated on 12/24/24" if termcolor else f"[ INFO ] Running CRYoink version {vers}, updated on 12/24/24")
+    print(f"{colored('[ INFO ]', 'grey')} Running CRYoink version {vers}, updated on 7/28/25" if termcolor else f"[ INFO ] Running CRYoink version {vers}, updated on 7/28/25")
 
 helpmessage = f"""CRYoink version {vers}
 
@@ -55,12 +55,16 @@ helpmessage = f"""CRYoink version {vers}
 -i[d]   [ The extension ID you would like to yoink.                    ]
 -o[ut]  [ The file to be written into. e.x extension.crx.              ]
 -O[D]   [ The directory to write the crx file into. e.x extensions/.   ]
--u[rl]  [ Select a URL to be used. Insert {id} where ID is necessary.  ]
+-u[rl]  [ Select a URL to be used. Insert {{id}} where ID is necessary.  ]
 -U      [ Extracts inside of crx into output directory or path ran in. ]
 -v      [ Enables verbose mode. Prints debug statements like warnings  ]
 -s      [ Disables/Supresses print statements.                         ]
 -b      [ Lets you enter multiple extension IDs. Must be used at end.  ]
 """
+
+if len(args) < 2:
+    print(helpmessage)
+    sys.exit(0)
 
 # Help arg handling
 if "-h" in args or "-help" in args or "--help" in args:
